@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>直升機維修執照 Module 12 全真模擬題庫 App</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="M12 題庫">
+    
+    <!-- CSS Styling (No external framework, inline CSS for speed and standalone portability) -->
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: #3b82f6;
+                --primary-light: #60a5fa;
+                --bg: #0f172a;
+                --card-bg: #1e293b;
+                --text: #f8fafc;
+                --text-muted: #94a3b8;
+                --success: #34d399;
+                --danger: #f87171;
+                --border: #334155;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-area-inset-bottom) + 60px) env(safe-area-inset-left);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            position: sticky;
+            top: 0;
+            zIndex: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: var(--primary-light);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: opacity 0.2s;
+        }
+
+        .btn:active {
+            opacity: 0.8;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: left;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .option-btn.correct {
+            background-color: var(--success) !important;
+            color: white !important;
+            border-color: var(--success) !important;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--danger) !important;
+            color: white !important;
+            border-color: var(--danger) !important;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            background: var(--border);
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: none;
+            width: 25%;
+            text-align: center;
+        }
+
+        .nav-item.active {
+            color: var(--primary-light);
+            font-weight: bold;
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .explanation {
+            margin-top: 12px;
+            padding: 10px;
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--primary-light);
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .score-pass {
+            color: var(--success);
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-fail {
+            color: var(--danger);
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header id="app-title">Module 12 模擬試題 App</header>
+
+    <div class="container">
+        <!-- 1. 首頁/設定畫面 -->
+        <div id="view-setup" class="view">
+            <div class="card">
+                <h2>⚙️ 建立新測驗</h2>
+                
+                <div class="form-group">
+                    <label>選擇章節節次</label>
+                    <select id="select-chapter">
+                        <option value="all">【全部章節混合隨機】</option>
+                        <option value="12.01">12.01 飛行原理-旋翼機空氣動力學</option>
+                        <option value="12.02">12.02 飛行控制系統</option>
+                        <option value="12.03">12.03-12.04 葉片軌跡/振動與傳動系</option>
+                        <option value="12.05">12.05 機身結構 (Structures)</option>
+                        <option value="12.06">12.06 空調與環境控制 (ATA 21)</option>
+                        <option value="12.07">12.07 儀表與航電系統</option>
+                        <option value="12.08">12.08 直流與交流電氣動力 (ATA 24)</option>
+                        <option value="12.09">12.09 機艙設備與裝飾 (ATA 25)</option>
+                        <option value="12.10">12.10 火警保護系統 (ATA 26)</option>
+                        <option value="12.11">12.11 航空燃油系統 (ATA 28)</option>
+                        <option value="12.12">12.12 液壓動力系統 (ATA 29)</option>
+                        <option value="12.13">12.13 防冰與除雨系統 (ATA 30)</option>
+                        <option value="12.14">12.14 起落架系統 (ATA 32)</option>
+                        <option value="12.15">12.15 燈光系統 (ATA 33)</option>
+                        <option value="12.16">12.16 氣動與真空系統 (ATA 36)</option>
+                        <option value="12.17">12.17 整合航電 / 綜合補充題</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>作答模式</label>
+                    <select id="select-mode">
+                        <option value="study">💡 學習模式 (即時看解析答案)</option>
+                        <option value="exam">⏱️ 模擬考模式 (交卷後才看成果)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>題數限制</label>
+                    <select id="select-count">
+                        <option value="10">10 題</option>
+                        <option value="20">20 題</option>
+                        <option value="30">30 題</option>
+                        <option value="50">50 題</option>
+                        <option value="100">100 題 (無上限最大量)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>題目順序</label>
+                    <select id="select-order">
+                        <option value="random">🔀 隨機亂序出題</option>
+                        <option value="sequential">🔢 依原始題號順序</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="startQuiz()">🚀 開始測驗</button>
+            </div>
+
+            <div class="card" id="ios-pwa-banner">
+                <h2>📲 加入 iPhone 主畫面離線使用</h2>
+                <p style="font-size:0.9rem; color:var(--text-muted);">點擊 Safari 瀏覽器底部的 <strong>分享按鈕 📤</strong>，向下滑動並選擇 <strong>「加入主畫面」</strong>。之後即可像原生 App 一樣，在無網路飛航模式下繼續刷題！</p>
+            </div>
+        </div>
+
+        <!-- 2. 測驗進行畫面 -->
+        <div id="view-quiz" class="view hidden">
+            <div class="flex-between" style="margin-bottom: 10px;">
+                <span id="quiz-progress" style="font-weight: 500;">題目載入中...</span>
+                <button class="badge" id="btn-collect" style="cursor:pointer; border:1px solid var(--border);" onclick="toggleCollectCurrent()">⭐ 收藏此題</button>
+            </div>
+            
+            <div class="card">
+                <div class="badge" id="question-chapter">章節</div>
+                <div id="question-text" style="font-weight: 600; margin-bottom: 15px; font-size:1.05rem;">題目內文</div>
+                <div id="options-container"></div>
+                <div id="study-explanation" class="explanation hidden"></div>
+            </div>
+
+            <div class="flex-between" style="gap: 10px;">
+                <button class="btn btn-outline" style="width:45%" id="btn-prev" onclick="prevQuestion()">上一題</button>
+                <button class="btn" style="width:45%" id="btn-next" onclick="nextQuestion()">下一題</button>
+            </div>
+            <button class="btn id-btn-submit hidden" style="background-color:var(--success); margin-top:15px;" onclick="submitExam()">📥 提前交卷</button>
+        </div>
+
+        <!-- 3. 測驗結果與錯題檢討畫面 -->
+        <div id="view-result" class="view hidden">
+            <div class="card" style="text-align: center;">
+                <h2>📊 測驗結算報告</h2>
+                <div id="quiz-score-container"></div>
+                <p id="quiz-result-stats" style="margin-bottom: 15px; color:var(--text-muted);"></p>
+                <button class="btn" onclick="showView('setup')">返回首頁重新挑戰</button>
+                <button class="btn btn-outline" id="btn-review-errors" onclick="startErrorReview()">❌ 僅針對本次錯題重新練習</button>
+            </div>
+        </div>
+
+        <!-- 4. 歷史紀錄與收藏題庫 -->
+        <div id="view-records" class="view hidden">
+            <div class="card">
+                <h2>⭐ 收藏題庫庫存 (<span id="collect-count-val">0</span>)</h2>
+                <button class="btn" id="btn-start-collected" onclick="startCollectedQuiz()">練習全部收藏題</button>
+            </div>
+            <div class="card">
+                <h2>📈 歷史模擬考成績檔 (及格門檻: 80 分)</h2>
+                <div id="history-log" style="font-size:0.9rem; max-height:200px; overflow-y:auto;">暫無紀錄</div>
+                <button class="btn btn-outline" style="margin-top:10px; padding:6px; font-size:0.8rem;" onclick="clearHistory()">清除所有紀錄</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導覽列 -->
+    <div class="nav-bar">
+        <div class="nav-item active" id="nav-setup" onclick="showView('setup')">
+            <div class="nav-icon">📝</div>
+            <div>開始刷題</div>
+        </div>
+        <div class="nav-item" id="nav-records" onclick="showView('records'); updateRecordsView();">
+            <div class="nav-icon">📈</div>
+            <div>收藏與紀錄</div>
+        </div>
+    </div>
+
+    <!-- 完整全真航空 M12 題庫資料集 -->
+    <script>
+        const MASTER_DB = [
+            // 12.01
+            { id: 1, ch: "12.01", q: "A helicopter is hovering and the pilot applies right pedal. Assuming the main rotor rotates anti clockwise viewed from above, the helicopter will.\n直升機滯空且右舵向前時，假設從上方看主旋翼為反時針旋轉，則直升機將會如何？", ans: "C", opts: { A: "descend, unless the pilot applies more collective pitch.", B: "descend, unless the pilot inches the throttle open.", C: "ascend, unless the pilot decreases rotor RPM. 上升,除非駕駛降低旋翼轉速" } },
+            { id: 2, ch: "12.01", q: "Forward velocity causes the advancing blade to.\n向前速率導致前進旋翼葉片：", ans: "C", opts: { A: "flap down to increase lift.", B: "give increased lift due to blade flapping.", C: "flap up to reduce lift. 向上撲動而減少升力" } },
+            { id: 3, ch: "12.01", q: "When the rotor blade increases its angle of attack, the centre of pressure.\n當旋翼片增加攻角時，其壓力中心：", ans: "C", opts: { A: "moves forward.", B: "moves rearwards.", C: "does not move. 不會移動" } },
+            { id: 4, ch: "12.01", q: "The ground effect is effective up to a height equalling.\n地面效應有效高度等於：", ans: "A", opts: { A: "the diameter of the rotor disc. 旋翼碟面直徑", B: "twice the diameter of the rotor disc.", C: "the length of the fuselage." } },
+            { id: 5, ch: "12.01", q: "The blade stalling speed will.\n葉片失速速度將會：", ans: "C", opts: { A: "only change if the MTWA were changed.", B: "be unaffected by helicopter weight changes since it is dependant upon the angle of attack.", C: "increase with an increase in helicopter weight. 隨直升機重量增加而增加" } },
+            { id: 6, ch: "12.01", q: "Ground effect will be most apparent when.\n地面效應將會在何時出現？", ans: "B", opts: { A: "taxiing in the hover.", B: "hovering close to the ground. 接近地面滯空時", C: "taxiing on the ground." } },
+            { id: 7, ch: "12.01", q: "The stalling speed of an helicopter blade.\n直升機葉片失速速度為：", ans: "B", opts: { A: "does not change.", B: "is increased when the helicopter is heavier. 當直升機重量增加時增加", C: "is increased when the helicopter is lighter." } },
+            
+            // 12.02
+            { id: 8, ch: "12.02", q: "In straight and level forward flight, the rotor disc will be tilted down.\n在水平向前直飛時，旋翼碟面將會傾斜向下：", ans: "C", opts: { A: "at 90 degrees to the direction of flight.", B: "opposite to the direction of flight.", C: "in the direction of flight. 往飛行方向" } },
+            { id: 9, ch: "12.02", q: "The rotor tip path is tilted.\n旋翼翼尖徑面是傾斜何方向？", ans: "B", opts: { A: "90 degrees to the direction of flight.", B: "in the direction of flight. 飛行方向", C: "in the opposite direction of flight." } },
+            { id: 10, ch: "12.02", q: "In a helicopter with a main rotor rotating anti-clockwise (when viewed from above), moves into rearward translational flight, maximum pitch is applied.\n主旋翼反時針旋轉的直升機，向後方傳導飛行移動，最大變距是供應到：", ans: "A", opts: { A: "to the right of the aircrafts longitudinal axis. 飛機縱軸右側 (3 點鐘方向)", B: "to the left of the aircrafts longitudinal axis.", C: "forward of the aircrafts lateral axis." } },
+            { id: 11, ch: "12.02", q: "A helicopter tail rotor is fitted to.\n直升機尾旋翼作用：", ans: "B", opts: { A: "counteract rotor torque and provide a rapid turn facility.", B: "counteract engine torque and provide normal directional control. 抵銷發動機扭力及提供正常方向控制", C: "permit directional control." } },
+            { id: 12, ch: "12.02", q: "How do the rotors turn on a co-axial rotor system?\n同軸雙旋翼系統如何運作？", ans: "A", opts: { A: "They counter-rotate on a common shaft. 在同一軸上兩葉片反向旋轉", B: "Both rotate in the same direction on a common shaft.", C: "They counter-rotate on separate shafts." } },
+            { id: 13, ch: "12.02", q: "Manual trim with the autopilot disengaged is normally achieved by.\n正常狀態下自動駕駛解離，手動配平如何獲得：", ans: "A", opts: { A: "pressing the trim release button and moving the cyclic stick. 壓下配平釋放按鈕並移動迴旋桿", B: "dedicated trim switches on the autopilot control panel", C: "moving the 'coolie hat'" } },
+            { id: 14, ch: "12.02", q: "Where an auxiliary servo unit is used to apply autopilot commands to the controls, feedback is provided by.\n輔助伺服單元是用來供應自動駕駛命令到各控制桿、回饋是由何提供？", ans: "A", opts: { A: "LVDT. 線性差分致動器", B: "control synchros.", C: "mechanical feedback through linkages." } },
+
+            // 12.03-12.04
+            { id: 15, ch: "12.03", q: "Medium vibration of 4 to 6 times per revolution is experienced on a helicopter. The primary control method is.\n直升機產生每轉一圈產生4-6次中頻震動,主要控制方式為：", ans: "A", opts: { A: "design of engine and gearbox supports. 發動機及齒輪箱支撐座設計", B: "inspect loose fixtures and fittings.", C: "inspect main rotor head and main drive shaft." } },
+            { id: 16, ch: "12.04", q: "A rotor brake is located.\n旋翼煞車位於何處？", ans: "B", opts: { A: "between the engine and the free power turbine.", B: "between the main rotor gearbox and the rotor head. 主旋翼齒輪箱與旋翼頭之間", C: "between the free power turbine and the main rotor gearbox." } },
+            { id: 17, ch: "12.04", q: "The oil system used in helicopter gear boxes is.\n直升機齒輪箱採用何種滑油系統：", ans: "A", opts: { A: "pumped oil via replaceable, non-adjustable specific jets. 加壓滑油經可換式,非調整式特定噴嘴", B: "splash.", C: "pumped oil via non replaceable, adjustable specific jets." } },
+            { id: 18, ch: "12.04", q: "On a gear box quill drive with a master shim.\n齒輪箱輸出套軸配有主要填片：", ans: "A", opts: { A: "shim must stay with gear box. 填片必須與齒輪箱在一起", B: "shim is replaced with quill drive.", C: "size, thickness + location of shim is given on gearbox." } },
+
+            // 12.05 Structures
+            { id: 19, ch: "12.05", q: "The purpose of a primer is to.\n底漆的作用為：", ans: "B", opts: { A: "provide shiny surface for the topcoat.", B: "help bonding of the topcoat. 提供光滑表面幫助面漆附著", C: "provide flexible surface for the top coat." } },
+            { id: 20, ch: "12.05", q: "In semi-monocoque construction, compression loads are taken by.\n半硬殼式結構壓縮負載是由何組件吸收：", ans: "A", opts: { A: "stringers. 縱樑", B: "frames.", C: "bulkheads." } },
+            { id: 21, ch: "12.05", q: "What opposes buckling in a semi-monocoque structure?\n半硬殼式結構何材料承受彎曲力？", ans: "B", opts: { A: "Frames.", B: "Stringers. 縱樑", C: "Bulkheads." } },
+            { id: 22, ch: "12.05", q: "Which of the following is an example of a failsafe structure?\n下列哪一材料屬於失效安全結構？", ans: "C", opts: { A: "Spar.", B: "Longeron.", C: "Stringer. 縱樑" } },
+            { id: 23, ch: "12.05", q: "Battery trays are.\n電瓶托盤是何材質？", ans: "C", opts: { A: "metal for earthing purposes.", B: "absorbent to soak up electrolyte.", C: "metal with PVC coating and anti corrosive paint. 烯基(PVC)包覆及防腐蝕漆之金屬" } },
+            { id: 24, ch: "12.05", q: "Directional axis of a helicopter.\n直升機的方向軸：", ans: "A", opts: { A: "passes through the c of g of the helicopter. 通過直升機重心", B: "passes through the centre of lift at right angles to relative air flow (RAF).", C: "half way between the main and tail rotor." } },
+            { id: 25, ch: "12.05", q: "A member taking a compression load is called a.\n承受壓縮負載的結構件稱為：", ans: "C", opts: { A: "beam.", B: "cable.", C: "strut. 支柱" } },
+            { id: 26, ch: "12.05", q: "Synthetic resins are made from nylon, vinyl and.\n合成樹脂是由尼龍、乙烯基及：", ans: "C", opts: { A: "asphalt.", B: "cellulose.", C: "acrylics. 壓克力" } },
+            { id: 27, ch: "12.05", q: "Structure with built-in redundancy is called.\n結構做成雙套備用稱之為：", ans: "C", opts: { A: "safe life.", B: "double safe.", C: "failsafe. 失效安全" } },
+            { id: 28, ch: "12.05", q: "If a redundant structure fails it becomes.\n若是雙套備用結構失效，其變成：", ans: "A", opts: { A: "failsafe. 失效安全", B: "safe-life.", C: "fatigued." } },
+            { id: 29, ch: "12.05", q: "A Fenestron tail rotor.\n涵道式尾旋翼：", ans: "B", opts: { A: "has four blades.", B: "is a shrouded rotor. 為有護罩旋翼片", C: "is a variable speed rotor." } },
+
+            // 12.06 Air Conditioning
+            { id: 30, ch: "12.06", q: "What is the minimum cabin air mass flow?\n最小座艙空氣質量流為多少？", ans: "C", opts: { A: "10 lbs per minute per person.", B: "1 lbs per minute per person.", C: "0.5 lbs per minute per person. 每人每分鐘 0.5 磅" } },
+            { id: 31, ch: "12.06", q: "How much air is required for the Flight Deck?\n駕駛艙需要多少空氣？", ans: "B", opts: { A: "10 lbs/minute.", B: "10 cubic feet/minute. 每分鐘 10 立方呎", C: "Whatever the captain sets." } },
+            { id: 32, ch: "12.06", q: "A water separator is located.\n水分離器位於何處？", ans: "C", opts: { A: "upstream of the turbine.", B: "downstream of heat exchanger.", C: "downstream of turbine. 渦輪下游" } },
+            { id: 33, ch: "12.06", q: "In typical vapour cycle system, the sub-cooler.\n在典型蒸氣循環系統中，次冷卻器用途？", ans: "C", opts: { A: "cools the vapour further to prevent slugging.", B: "delivers extra cooling effect when the aircraft is on ground.", C: "is a heat exchanger to superheat the vapour. 作為超熱蒸氣的熱交換器" } },
+            { id: 34, ch: "12.06", q: "An air cycle machine turbine.\n空調機的渦輪用途？", ans: "A", opts: { A: "drives compressor to increase temperature. 驅動壓縮器以增加溫度", B: "drives compressor to pressurise aircraft.", C: "drives compressor to decrease temperature." } },
+            { id: 35, ch: "12.06", q: "In a turbo fan cold air system, the heat exchanger cooling air is.\n在渦輪風扇冷卻空氣系統中，熱交換器的冷卻空氣是：", ans: "B", opts: { A: "air bled directly from engine or through blower.", B: "ram air from ambient conditions. 來自環境的衝壓空氣", C: "bled from cabin air supply duct." } },
+
+            // 12.07 Avionics & Instruments
+            { id: 36, ch: "12.07", q: "Track altitude in a radio altimeter system begins at.\n無線電高度系統的追蹤高度開始於何時？", ans: "B", opts: { A: "1000 ft radio alt.", B: "2500 ft radio alt. 無線電高度 2500 呎", C: "10000 ft radio alt." } },
+            { id: 37, ch: "12.07", q: "The hot junction of thermocouple is.\n熱電耦的熱端是：", ans: "C", opts: { A: "in the instrument.", B: "in the combustion chamber.", C: "aft of combustion chamber. 在燃燒室後面" } },
+            { id: 38, ch: "12.07", q: "An H on the EHSI indicates.\n字樣H出現在電子水平狀態指示器中表示？", ans: "A", opts: { A: "DME hold. 測距儀 DME 保持中", B: "ILS approach.", C: "VOR hold." } },
+            { id: 39, ch: "12.07", q: "What happens if frequency increases without altering the physical length of aerial?\n如果頻率增加，不改變天線本體長度會？", ans: "B", opts: { A: "The aerial becomes inductively capacitive.", B: "The aerial becomes inductively reactive. 天線會變成電感反應", C: "The aerial becomes capacitively reactive." } },
+
+            // 12.08 Electrical
+            { id: 40, ch: "12.08", q: "In unparalleled AC generation systems, the phase rotation of one generator in relation to the others.\n在非並聯交流發電機系統中，一台發電機的旋轉相位與其他台的關係：", ans: "C", opts: { A: "must be synchronised prior to paralleling.", B: "must be BCA.", C: "is unimportant. 不重要" } },
+            { id: 41, ch: "12.08", q: "Circulating currents are associated with.\n循環電流與甚麼有關？", ans: "B", opts: { A: "DC generators in parallel.", B: "AC generators in parallel. 並聯直流發電機", C: "AC and DC generators in parallel." } },
+
+            // 12.09 Cabin Equip
+            { id: 42, ch: "12.09", q: "Cargo and baggage compartments in which a fire is completely confined come under.\n何種貨物和行李艙內火勢會完全限制：", ans: "B", opts: { A: "Class C.", B: "Class D. 等級 D", C: "Class B." } },
+            { id: 43, ch: "12.09", q: "The minimum passenger aisle width for an aircraft with a seating capacity of 20 or more is.\n乘客20人以上走道寬應該多少？", ans: "A", opts: { A: "15. 15 英吋", B: "dependant upon aircraft type.", C: "24." } },
+
+            // 12.10 Fire Protection
+            { id: 44, ch: "12.10", q: "A Systron-Donner fire detection system uses.\nSystron-Donner火災探測系統使用：", ans: "A", opts: { A: "helium gas. 氦氣.", B: "oxygen gas.", C: "nitrogen gas." } },
+            { id: 45, ch: "12.10", q: "In a gas firewire system, what causes the firewire caption to come on when heat is applied?\n氣體火線系統當受熱時何時致動？", ans: "B", opts: { A: "Continuity.", B: "Pressure. 壓力", C: "Capacitance increase." } },
+
+            // 12.11 Fuel
+            { id: 46, ch: "12.11", q: "A fuel crossfeed valve is usually in.\n燃油交叉輸送閥通常在：", ans: "A", opts: { A: "the closed position. 關閉位置", B: "the open position.", C: "its last position." } },
+            { id: 47, ch: "12.11", q: "In biologically contaminated fuel, corrosion takes place.\n生物污染的燃油中發生腐蝕在：", ans: "A", opts: { A: "below the fungal colonies. 真菌下方", B: "the top of the tank.", C: "the bottom 2 inches of the tank." } },
+
+            // 12.12 Hydraulic
+            { id: 48, ch: "12.12", q: "A maintainer valve in an hydraulic system will.\n液壓系統中的維持瓣將會：", ans: "A", opts: { A: "allow continued press to essential systems during times of reduced supply. 在減壓供應期間，容許持續壓力供應到必要系統中", B: "dampen pressure inputs.", C: "maintain a high pressure to all systems." } },
+            { id: 49, ch: "12.12", q: "The end fittings on a NRV(non-return valve) are normally different to.\nNRV（止回閥）上的末端接頭通常不同是：", ans: "C", opts: { A: "facilitate bleeding of the system.", B: "allow a full flow from the valve.", C: "prevent incorrect installation. 防止錯誤的安裝" } },
+
+            // 12.13 Ice & Rain
+            { id: 50, ch: "12.13", q: "An ice deposit formed when liquid water flows over the airframe before freezing, and which is dense, tough and sticks closely to the surface is called.\n當液態水在冷凍之前流過機體時形成的並且密實，堅韌並緊貼表面面的冰沉積物被稱為：", ans: "A", opts: { A: "glaze Ice. 釉冰 (明冰)", B: "rime Ice.", C: "hoar Frost." } },
+
+            // 12.14 Landing Gear
+            { id: 51, ch: "12.14", q: "Fuse plugs in aircraft tyres are for.\n飛機輪胎上的保險堵頭是：", ans: "C", opts: { A: "overpressure protection. 防超壓", B: "to deflate the tyre before removal.", C: "over temperature protection. 防超溫" } },
+
+            // 12.15 Lights
+            { id: 52, ch: "12.15", q: "Tritium Gas is used in a.\n氚氣使用於：", ans: "C", opts: { A: "strobe light.", B: "landing Light.", C: "self illuminating lights. 自體發光燈" } },
+
+            // 12.16 Pneumatic
+            { id: 53, ch: "12.16", q: "The pneumatic system pump is a.\n氣動泵是：", ans: "C", opts: { A: "centrifugal type.", B: "rotor vane type.", C: "piston type. 活塞式" } },
+
+            // 綜合補充題
+            { id: 54, ch: "12.17", q: "最常見的 2 種航空燃油存量表型式為？", ans: "A", opts: { A: "電阻式、電容式", B: "光電式、浮筒式", C: "壓電式、超音波式" } },
+            { id: 55, ch: "12.17", q: "直升機的總體結構與空氣動力設計理念通常為？", ans: "B", opts: { A: "靜態不穩定，動態穩定", B: "靜態穩定，動態不穩定", C: "靜態與動態皆完全穩定" } }
+        ];
+
+        let currentQuizQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = {};
+        let collectedQuestions = JSON.parse(localStorage.getItem('m12_collected')) || [];
+        let historyLog = JSON.parse(localStorage.getItem('m12_history')) || [];
+
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById('view-' + viewId).classList.remove('hidden');
+            const nav = document.getElementById('nav-' + viewId);
+            if(nav) nav.classList.add('active');
+            
+            if(viewId === 'setup') {
+                document.getElementById('app-title').innerText = "Module 12 模擬試題 App";
+            }
+        }
+
+        function startQuiz() {
+            const ch = document.getElementById('select-chapter').value;
+            const count = parseInt(document.getElementById('select-count').value);
+            const order = document.getElementById('select-order').value;
+            
+            // Filter
+            let filtered = [];
+            if(ch === 'all') {
+                filtered = [...MASTER_DB];
+            } else {
+                filtered = MASTER_DB.filter(q => q.ch === ch);
+            }
+
+            if(filtered.length === 0) {
+                alert("該選定節次暫無庫存題目，請選擇其他單元或全部隨機！");
+                return;
+            }
+
+            // Order
+            if(order === 'random') {
+                filtered.sort(() => Math.random() - 0.5);
+            } else {
+                filtered.sort((a,b) => a.id - b.id);
+            }
+
+            // Slice count
+            currentQuizQuestions = filtered.slice(0, count);
+            currentIndex = 0;
+            userAnswers = {};
+
+            document.querySelector('.id-btn-submit').classList.remove('hidden');
+            showView('quiz');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            if(currentQuizQuestions.length === 0) return;
+            const q = currentQuizQuestions[currentIndex];
+            
+            document.getElementById('quiz-progress').innerText = `進度：${currentIndex + 1} / ${currentQuizQuestions.length}`;
+            document.getElementById('question-chapter').innerText = `單元章節: ${q.ch}`;
+            document.getElementById('question-text').innerText = q.q.replace(/\n/g, '\n');
+            
+            // Collect button style
+            const btnCollect = document.getElementById('btn-collect');
+            if(collectedQuestions.includes(q.id)) {
+                btnCollect.innerText = "⭐ 已收藏";
+                btnCollect.style.backgroundColor = "var(--primary-light)";
+                btnCollect.style.color = "white";
+            } else {
+                btnCollect.innerText = "⭐ 收藏此題";
+                btnCollect.style.backgroundColor = "transparent";
+                btnCollect.style.color = "var(--text)";
+            }
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            const mode = document.getElementById('select-mode').value;
+
+            ['A', 'B', 'C'].forEach(optKey => {
+                if(!q.opts[optKey]) return;
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = `(${optKey}) ${q.opts[optKey]}`;
+                
+                // If already answered
+                if(userAnswers[currentIndex] !== undefined) {
+                    if(mode === 'study') {
+                        if(optKey === q.ans) btn.classList.add('correct');
+                        else if(optKey === userAnswers[currentIndex]) btn.classList.add('wrong');
+                    } else {
+                        if(optKey === userAnswers[currentIndex]) {
+                            btn.style.borderColor = "var(--primary-light)";
+                            btn.style.backgroundColor = "rgba(59, 130, 246, 0.1)";
+                        }
+                    }
+                }
+
+                btn.onclick = () => selectOption(optKey, btn);
+                container.appendChild(btn);
+            });
+
+            // Explanation in study mode
+            const expBox = document.getElementById('study-explanation');
+            if(mode === 'study' && userAnswers[currentIndex] !== undefined) {
+                expBox.classList.remove('hidden');
+                expBox.innerHTML = `<strong>標準答案：[ ${q.ans} ]</strong><br>依據航空修護發照規範，請熟記本題中英文對照的核心概念。`;
+            } else {
+                expBox.classList.add('hidden');
+            }
+        }
+
+        function selectOption(optKey, btnElement) {
+            if(userAnswers[currentIndex] !== undefined) return; // Prevent double answer change in study mode
+            
+            userAnswers[currentIndex] = optKey;
+            const q = currentQuizQuestions[currentIndex];
+            const mode = document.getElementById('select-mode').value;
+
+            if(mode === 'study') {
+                renderQuestion(); // Re-render to lock colors instantly
+            } else {
+                // Exam mode: just highlight locally
+                document.querySelectorAll('.option-btn').forEach(b => {
+                    b.style.borderColor = "var(--border)";
+                    b.style.backgroundColor = "var(--card-bg)";
+                });
+                btnElement.style.borderColor = "var(--primary-light)";
+                btnElement.style.backgroundColor = "rgba(59, 130, 246, 0.1)";
+            }
+        }
+
+        function prevQuestion() {
+            if(currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if(currentIndex < currentQuizQuestions.length - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                // Last question reached
+                submitExam();
+            }
+        }
+
+        function toggleCollectCurrent() {
+            const q = currentQuizQuestions[currentIndex];
+            if(!q) return;
+            if(collectedQuestions.includes(q.id)) {
+                collectedQuestions = collectedQuestions.filter(id => id !== q.id);
+            } else {
+                collectedQuestions.push(q.id);
+            }
+            localStorage.setItem('m12_collected', JSON.stringify(collectedQuestions));
+            renderQuestion();
+        }
+
+        function submitExam() {
+            let correctCount = 0;
+            currentQuizQuestions.forEach((q, idx) => {
+                if(userAnswers[idx] === q.ans) correctCount++;
+            });
+
+            const score = Math.round((correctCount / currentQuizQuestions.length) * 100);
+            const isPass = score >= 80;
+
+            // Log history
+            const modeText = document.getElementById('select-mode').value === 'study' ? '學習' : '模擬考';
+            const record = {
+                date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                score: score,
+                total: currentQuizQuestions.length,
+                correct: correctCount,
+                mode: modeText
+            };
+            historyLog.unshift(record);
+            localStorage.setItem('m12_history', JSON.stringify(historyLog));
+
+            // Render Result View
+            showView('result');
+            
+            const scoreContainer = document.getElementById('quiz-score-container');
+            if(isPass) {
+                scoreContainer.innerHTML = `<div class="score-pass">🎉 PASS<br><span style="font-size:1.5rem">${score} 分</span></div>`;
+            } else {
+                scoreContainer.innerHTML = `<div class="score-fail">❌ FAIL<br><span style="font-size:1.5rem">${score} 分</span></div>`;
+            }
+
+            document.getElementById('quiz-result-stats').innerHTML = `本次測試共 <strong>${currentQuizQuestions.length}</strong> 題，答對 <strong>${correctCount}</strong> 題，答錯 <strong>${currentQuizQuestions.length - correctCount}</strong> 題。<br>及格標準為 80 分。`;
+
+            // Adjust review errors button visibility
+            const btnErr = document.getElementById('btn-review-errors');
+            if(score === 100) {
+                btnErr.classList.add('hidden');
+            } else {
+                btnErr.classList.remove('hidden');
+            }
+        }
+
+        function startErrorReview() {
+            // Filter down to only wrong answers in current set
+            let wrongSet = [];
+            currentQuizQuestions.forEach((q, idx) => {
+                if(userAnswers[idx] !== q.ans) {
+                    wrongSet.push(q);
+                }
+            });
+
+            currentQuizQuestions = wrongSet;
+            currentIndex = 0;
+            userAnswers = {};
+            document.getElementById('select-mode').value = 'study'; // Auto shift to study mode for review
+            showView('quiz');
+            renderQuestion();
+        }
+
+        function updateRecordsView() {
+            document.getElementById('collect-count-val').innerText = collectedQuestions.length;
+            
+            const logBox = document.getElementById('history-log');
+            if(historyLog.length === 0) {
+                logBox.innerHTML = "暫無測驗紀錄";
+                return;
+            }
+
+            logBox.innerHTML = historyLog.map(r => {
+                const color = r.score >= 80 ? 'green' : 'red';
+                return `<div style="border-bottom:1px solid var(--border); padding:8px 0; display:flex; justify-content:space-between;">
+                    <div>📅 ${r.date} (${r.mode})</div>
+                    <div style="color:${color}; font-weight:bold;">${r.score}分 (${r.correct}/${r.total}題)</div>
+                </div>`;
+            }).join('');
+        }
+
+        function clearHistory() {
+            if(confirm("確定要清除所有歷史成績紀錄嗎？")) {
+                historyLog = [];
+                localStorage.removeItem('m12_history');
+                updateRecordsView();
+            }
+        }
+
+        function startCollectedQuiz() {
+            if(collectedQuestions.length === 0) {
+                alert("目前尚無收藏題目喔！請在作答時點擊右上方星號收藏。");
+                return;
+            }
+
+            currentQuizQuestions = MASTER_DB.filter(q => collectedQuestions.includes(q.id));
+            currentIndex = 0;
+            userAnswers = {};
+            document.getElementById('select-mode').value = 'study';
+            showView('quiz');
+            renderQuestion();
+        }
+    </script>
+</body>
+</html>
